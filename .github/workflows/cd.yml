@@ -1,10 +1,23 @@
-name: Node.js CD
+name: vndev-prod-deployment
 
 on:
   push:
     branches: [main]
 
 jobs:
+  testing-prod:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 12
+        uses: actions/setup-node@v2
+        with:
+          node-version: 12.x
+      - run: npm i
+      - run: npm run build --if-present
+      - run: npm test
+
   deploy-prod:
     runs-on: ubuntu-latest
 
