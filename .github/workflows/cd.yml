@@ -2,26 +2,26 @@ name: Node.js CD
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Deploy using ssh
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.PRIVATE_KEY }}
-        port: 22
-        script: |
-          cd /home/silver/apps/vndev-backend
-          git pull origin main
-          export NVM_DIR=~/.nvm
-          source ~/.nvm/nvm.sh
-          git status
-          yarn install
-          yarn build
-          pm2 restart vndev-backend
+      - name: Deploy using ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd /home/silver/apps/vndev-backend
+            git pull origin main
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+            git status
+            yarn install
+            yarn build
+            pm2 restart vndev-backend
