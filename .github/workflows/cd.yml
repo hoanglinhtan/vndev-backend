@@ -19,6 +19,8 @@ jobs:
         script: |
           cd /home/silver/apps/vndev-backend
           git pull origin main
+          export NVM_DIR=~/.nvm
+          source ~/.nvm/nvm.sh
           git status
           yarn install
           yarn build
