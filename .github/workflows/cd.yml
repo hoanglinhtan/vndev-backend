@@ -20,5 +20,6 @@ jobs:
           cd /home/silver/apps/vndev-backend
           git pull origin main
           git status
-          npm install --only=prod
+          yarn install
+          yarn build
           pm2 restart vndev-backend
