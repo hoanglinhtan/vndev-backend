@@ -30,6 +30,7 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           port: 22
           script: |
+            echo "${{ secrets.ENV_FILE }}" > .env
             cd /home/silver/apps/vndev-backend
             git pull origin main
             export NVM_DIR=~/.nvm

@@ -6,6 +6,6 @@ async function bootstrap() {
   await tracer.start();
 
   const app = await NestFactory.create(AppModule);
-  await app.listen(5000);
+  await app.listen(process.env.PORT);
 }
 bootstrap();
