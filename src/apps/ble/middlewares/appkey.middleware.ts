@@ -10,7 +10,7 @@ import { diag } from '@opentelemetry/api';
 export class AppKeyMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
     if (req.headers['app-key'] !== 'ble') {
-      diag.error(`[APP_KEY_REQUIRED] URL ${req.url}`);
+      diag.error(`[APP_KEY_REQUIRED] ${req.method} ${req.url} ${req.ip} `);
       throw new InternalServerErrorException('APP_KEY_REQUIRED');
     }
 
