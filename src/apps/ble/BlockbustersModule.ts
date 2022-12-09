@@ -6,7 +6,7 @@ import { FilmController } from './films/film.controller';
 import { Film } from './films/film.entity';
 import { FilmService } from './films/film.service';
 import { MediaFile } from './films/media-file.entity';
-import { ApiKeyMiddleware } from './middlewares/apikey.middleware';
+import { AppKeyMiddleware } from './middlewares/appkey.middleware';
 
 /**
  * Blockbuster Explain App: BLE
@@ -18,6 +18,6 @@ import { ApiKeyMiddleware } from './middlewares/apikey.middleware';
 })
 export class BlockbustersModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(ApiKeyMiddleware).forRoutes('*');
+    consumer.apply(AppKeyMiddleware).forRoutes('/ble');
   }
 }

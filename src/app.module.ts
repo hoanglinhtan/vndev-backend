@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BestQuotesModule, BlockbustersModule } from './apps';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
+import { ApiKeyMiddleware } from './middlewares/apikey.middleware';
 
 @Module({
   imports: [
@@ -33,6 +34,6 @@ import { LoggerMiddleware } from './middlewares/logger.middleware';
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes('*');
+    consumer.apply(LoggerMiddleware, ApiKeyMiddleware).forRoutes('*');
   }
 }
