@@ -5,27 +5,22 @@ import * as opentelemetry from '@opentelemetry/sdk-node';
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
 import { diag, DiagConsoleLogger, DiagLogLevel } from '@opentelemetry/api';
 
-const exporterOptions = {
-  url: 'http://localhost:4318/v1/traces',
-};
-
-const traceExporter = new OTLPTraceExporter(exporterOptions);
-
-diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO);
-
 const sdk = new opentelemetry.NodeSDK({
-  traceExporter,
+  traceExporter: new OTLPTraceExporter({
+    url: 'http://localhost:4318/v1/traces',
+  }),
   instrumentations: [getNodeAutoInstrumentations()],
   resource: new Resource({
     [SemanticResourceAttributes.SERVICE_NAME]: 'vndev-backend',
   }),
 });
 
-// initialize the SDK and register with the OpenTelemetry API
-// this enables the API to record telemetry
 sdk
   .start()
-  .then(() => console.log('Tracing initialized'))
+  .then(() => {
+    diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO);
+    console.log('Tracing initialized');
+  })
   .catch((error) => console.log('Error initializing tracing', error));
 
 // gracefully shut down the SDK on process exit
