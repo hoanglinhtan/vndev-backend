@@ -1,9 +1,10 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { diag } from '@opentelemetry/api';
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
+  private readonly logger = new Logger(LoggerMiddleware.name);
+
   use(request: Request, response: Response, next: NextFunction) {
     const { ip, method, originalUrl } = request;
     const userAgent = request.get('user-agent') || '';
@@ -11,7 +12,7 @@ export class LoggerMiddleware implements NestMiddleware {
     response.on('finish', () => {
       const { statusCode } = response;
       const message = `[REQ] ${method} ${originalUrl} ${statusCode} - ${userAgent} ${ip}`;
-      diag.info(message);
+      this.logger.log(message);
     });
 
     next();

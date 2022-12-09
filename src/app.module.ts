@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { BestQuotesModule, BlockbustersModule } from './apps';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { ApiKeyMiddleware } from './middlewares/apikey.middleware';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ApiKeyMiddleware } from './middlewares/apikey.middleware';
       }),
       inject: [ConfigService],
     }),
+    LoggerModule,
     BlockbustersModule,
     BestQuotesModule,
   ],
