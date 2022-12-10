@@ -6,17 +6,24 @@ export class AppLogger implements LoggerService {
   private readonly logger: winston.Logger;
 
   constructor() {
-    this.logger = winston.createLogger({
+    const { format, transports, createLogger } = winston;
+    this.logger = createLogger({
       level: 'info',
-      format: winston.format.json(),
+      format: format.combine(
+        format.timestamp({
+          format: 'YYYY-MM-DD,HH:mm:ss ZZ',
+          alias: 'time',
+        }),
+        format.json(),
+      ),
       transports: [
-        new winston.transports.Console(),
-        new winston.transports.File({
+        new transports.Console(),
+        new transports.File({
           dirname: 'logs',
           filename: 'error.log',
           level: 'error',
         }),
-        new winston.transports.File({ dirname: 'logs', filename: 'vndev.log' }),
+        new transports.File({ dirname: 'logs', filename: 'vndev.log' }),
       ],
     });
   }
