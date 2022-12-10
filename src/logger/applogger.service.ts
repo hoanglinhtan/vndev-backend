@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const LokiTransport = require('winston-loki');
 import { LoggerService } from '@nestjs/common';
 import * as winston from 'winston';
 
@@ -24,6 +26,14 @@ export class AppLogger implements LoggerService {
           level: 'error',
         }),
         new transports.File({ dirname: 'logs', filename: 'vndev.log' }),
+        new LokiTransport({
+          host: 'https://342516:eyJrIjoiMDA0ZDQ3NGQzODM3OWNmOTY3YTJkYzFlZTVjZTk4ZTFhNzFlZTQwZiIsIm4iOiJHUkFGQU5BX0FQSSIsImlkIjo3NTg4MTB9@logs-prod-011.grafana.net',
+          labels: { app: 'vndev' },
+          json: true,
+          format: format.json(),
+          replaceTimestamp: true,
+          onConnectionError: (err) => console.error(err),
+        }),
       ],
     });
   }
