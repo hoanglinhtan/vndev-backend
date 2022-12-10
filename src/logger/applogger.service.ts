@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const LokiTransport = require('winston-loki');
 import { LoggerService } from '@nestjs/common';
 import * as winston from 'winston';
+import { SentryService } from '@ntegral/nestjs-sentry';
 
 export class AppLogger implements LoggerService {
-  private readonly logger: winston.Logger;
+  private readonly winstonLogger: winston.Logger;
+  private readonly sentryLogger: SentryService;
 
   constructor() {
     const { format, transports, createLogger } = winston;
-    this.logger = createLogger({
+
+    this.winstonLogger = createLogger({
       level: 'info',
       format: format.combine(
         format.timestamp({
@@ -19,42 +20,39 @@ export class AppLogger implements LoggerService {
         format.json(),
       ),
       transports: [
-        new transports.Console(),
+        new transports.Console({
+          format: format.json(),
+        }),
         new transports.File({
           dirname: 'logs',
           filename: 'error.log',
           level: 'error',
         }),
         new transports.File({ dirname: 'logs', filename: 'vndev.log' }),
-        new LokiTransport({
-          host: 'https://342516:eyJrIjoiMDA0ZDQ3NGQzODM3OWNmOTY3YTJkYzFlZTVjZTk4ZTFhNzFlZTQwZiIsIm4iOiJHUkFGQU5BX0FQSSIsImlkIjo3NTg4MTB9@logs-prod-011.grafana.net',
-          labels: { app: 'vndev' },
-          json: true,
-          format: format.json(),
-          replaceTimestamp: true,
-          onConnectionError: (err) => console.error(err),
-        }),
       ],
     });
+
+    this.sentryLogger = SentryService.SentryServiceInstance();
   }
 
   log(message: any, ...optionalParams: any[]) {
-    this.logger.info(message);
+    this.winstonLogger.info(message);
   }
 
   error(message: any, ...optionalParams: any[]) {
-    this.logger.error(message);
+    this.winstonLogger.error(message);
+    this.sentryLogger.error(message);
   }
 
   warn(message: any, ...optionalParams: any[]) {
-    this.logger.warn(message);
+    this.winstonLogger.warn(message);
   }
 
   debug?(message: any, ...optionalParams: any[]) {
-    this.logger.debug(message);
+    this.winstonLogger.debug(message);
   }
 
   verbose?(message: any, ...optionalParams: any[]) {
-    this.logger.verbose(message);
+    this.winstonLogger.verbose(message);
   }
 }

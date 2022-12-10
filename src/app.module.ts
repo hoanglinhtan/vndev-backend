@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { BestQuotesModule, BlockbustersModule } from './apps';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { ApiKeyMiddleware } from './middlewares/apikey.middleware';
+import { SentryModule } from '@ntegral/nestjs-sentry';
 
 @Module({
   imports: [
@@ -23,6 +24,18 @@ import { ApiKeyMiddleware } from './middlewares/apikey.middleware';
         // only use this for development, please use migrations for production
         synchronize: true,
         logging: true,
+      }),
+      inject: [ConfigService],
+    }),
+    SentryModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        dsn: configService.get<string>('SENTRY_DSN'),
+        debug: false,
+        environment: configService.get<string>('NODE_ENV'),
+        release: `vndev@${configService.get<string>('npm_package_version')}`,
+        logLevels: ['error'],
+        timestamp: true,
       }),
       inject: [ConfigService],
     }),
