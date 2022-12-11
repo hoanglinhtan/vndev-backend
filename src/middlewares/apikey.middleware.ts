@@ -12,9 +12,7 @@ export class ApiKeyMiddleware implements NestMiddleware {
 
   use(req: Request, res: Response, next: NextFunction) {
     if (req.headers['api-key'] !== process.env.API_KEY) {
-      this.logger.error(
-        `[APP_KEY_REQUIRED] ${req.method} ${req.url} ${req.ip} `,
-      );
+      this.logger.error(`[API_KEY_REQUIRED] ${req.method} ${req.ip} `);
       throw new BadRequestException('API_KEY_REQUIRED');
     }
 

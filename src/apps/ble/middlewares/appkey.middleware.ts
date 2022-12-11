@@ -12,9 +12,7 @@ export class AppKeyMiddleware implements NestMiddleware {
 
   use(req: Request, res: Response, next: NextFunction) {
     if (req.headers['app-key'] !== 'ble') {
-      this.logger.error(
-        `[APP_KEY_REQUIRED] ${req.method} ${req.url} ${req.ip} `,
-      );
+      this.logger.error(`[APP_KEY_REQUIRED] ${req.method} ${req.ip} `);
       throw new BadRequestException('APP_KEY_REQUIRED');
     }
 
