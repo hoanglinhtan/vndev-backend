@@ -36,6 +36,9 @@ import { SentryModule } from '@ntegral/nestjs-sentry';
         release: `vndev@${process.env.npm_package_version}`,
         logLevels: ['error'],
         timestamp: true,
+        enabled: !['localhost', 'development'].includes(
+          configService.get<string>('NODE_ENV'),
+        ),
       }),
       inject: [ConfigService],
     }),
